@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 引入mapper命名空间
+  写sql语句
+-->
+<mapper namespace="com.hj.huji.dao.HujiDao">
+<!-- 
+  id:当前的唯一标识
+  resultType；指定返回的参数类型对象（地址）
+  parameterType:参数的类型
+-->
+	<!-- 插入记录不需要用到resultMap -->
+	<insert id="addHuji" parameterType="HujiInfo">
+		insert into cf_huji (huji_id,holder_name,holder_phone,
+		village_name,unit_num,room_num,holder_native,holder_status,order_num)
+		values(#{hujiId},#{holderName},#{holderPhone},#{villageName},
+		#{unitNum},#{roomNum},#{holderNative},#{holderStatus},#{orderNum});
+	</insert>
+<!--
+为了防止字段名和属性名不一致的冲突，使用resultMap
+ resultMap:封装一些映射关系
+ id:专门针对主键
+ result:针对普通字段
+-->
+	<!-- 查询全部户籍信息 -->
+	<select id="getAllHuji" parameterType="HujiInfo" resultMap="hujiResultMap">
+		select * from cf_huji order by order_num;
+	</select>
+	<!-- 查询单条户籍信息 -->
+	<select id="getHuji" parameterType="String" resultMap="hujiResultMap">
+		select * from cf_huji where huji_id=#{hujiId};
+	</select>
+		<resultMap id="hujiResultMap" type="HujiInfo">
+		<id property="hujiId" column="huji_id" />
+		<result property="holderName" column="holder_name" />
+		<result property="holderPhone" column="holder_phone" />
+		<result property="villageName" column="village_name" />
+		<result property="unitNum" column="unit_num" />
+		<result property="roomNum" column="room_num" />
+		<result property="holderNative" column="holder_native" />
+		<result property="holderStatus" column="holder_status" />
+		<result property="orderNum" column="order_num" />
+	</resultMap>
+	<!-- 修改户籍信息 -->
+	<update id="updateHuji" parameterType="HujiInfo">
+		update cf_huji set 
+		holder_name=#{holderName},holder_phone=#{holderPhone},
+		village_name=#{villageName},unit_num=#{unitNum},
+		room_num=#{roomNum},holder_native=#{holderNative},
+		holder_status=#{holderStatus},order_num=#{orderNum}
+		where huji_id=#{hujiId}
+	</update>
+	<!-- 删除户籍信息 -->
+	<delete id="deleteHuji" parameterType="int">
+		delete from cf_huji where huji_id=#{hujiId}
+	</delete>
+</mapper>
